@@ -23,7 +23,7 @@ defmodule GildedRose.Server do
   end
 
   def handle_cast(:update, items) do
-    {:noreply, Enum.map(items, &Time.pass/1)}
+    {:noreply, items |> Enum.map(&Time.weather/1) |> Enum.map(&Time.tick/1)}
   end
 
   defp identify(%Item{name: name} = item) do
