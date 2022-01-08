@@ -2,6 +2,13 @@ defmodule GildedRose.ServerTest do
   alias GildedRose.{Item, Server}
   use ExUnit.Case
 
+  test "items/1" do
+    {name, sell_in, quality} = {"Bruce Lee's Sunglasses", 0, 134_217_728}
+    item = Item.new(name, sell_in, quality)
+    server = start_supervised!({Server, [item]})
+    assert [%Item{name: ^name, sell_in: ^sell_in, quality: ^quality}] = Server.items(server)
+  end
+
   describe "Conjured update/1" do
     setup do
       [name: "Conjured boxing gloves"]
