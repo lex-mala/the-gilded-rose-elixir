@@ -1,5 +1,5 @@
 defmodule GildedRose.Server do
-  alias GildedRose.Item
+  alias GildedRose.{Item, Time}
   use GenServer
 
   def start_link(items) do
@@ -10,8 +10,8 @@ defmodule GildedRose.Server do
     GenServer.call(pid, :items)
   end
 
-  def update(pid, items) do
-    GenServer.cast(pid, {:update, items})
+  def update(pid) do
+    GenServer.cast(pid, :update)
   end
 
   def init(items) do
@@ -22,8 +22,8 @@ defmodule GildedRose.Server do
     {:reply, Enum.map(items, &elem(&1, 1)), items}
   end
 
-  def handle_cast({:update, items}, _, _) do
-    {:noreply, Enum.map(items, &identify/1)}
+  def handle_cast(:update, items) do
+    {:noreply, Enum.map(items, &Time.pass/1)}
   end
 
   defp identify(%Item{name: name} = item) do
