@@ -1,7 +1,17 @@
 defmodule GildedRose.Time do
   alias GildedRose.Item
 
-  @spec pass({:basic | :conjured, %Item{}}) :: {:basic | :conjured, %Item{}}
+  @type item_type :: :basic | :conjured
+
+  @spec pass({item_type(), %Item{}}) :: {item_type(), %Item{}}
+  def pass({:brie, %Item{quality: quality, sell_in: sell_in} = item}) when quality < 50 do
+    {:brie, %Item{item | quality: quality + 1, sell_in: sell_in - 1}}
+  end
+
+  def pass({:brie, %Item{sell_in: sell_in} = item}) do
+    {:brie, %Item{item | sell_in: sell_in - 1}}
+  end
+
   def pass({:conjured, %Item{quality: quality, sell_in: sell_in} = item}) when quality < 2 do
     {:conjured, %Item{item | quality: 0, sell_in: sell_in - 1}}
   end

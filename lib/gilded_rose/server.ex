@@ -27,10 +27,15 @@ defmodule GildedRose.Server do
   end
 
   defp identify(%Item{name: name} = item) do
-    if name |> String.downcase() |> String.contains?("conjured") do
-      {:conjured, item}
-    else
-      {:basic, item}
-    end
+    token = name |> String.downcase() |> String.trim()
+
+    type =
+      cond do
+        String.contains?(token, "aged brie") -> :brie
+        String.contains?(token, "conjured") -> :conjured
+        true -> :basic
+      end
+
+    {type, item}
   end
 end

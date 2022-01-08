@@ -18,14 +18,14 @@ defmodule GildedRose.ServerTest do
       item = Item.new(name, 5, 3)
       server = start_supervised!({Server, [item]})
       :ok = Server.update(server)
-      assert [{:basic, %Item{name: ^name, quality: 4, sell_in: 4}}] = :sys.get_state(server)
+      assert [{:brie, %Item{name: ^name, quality: 4, sell_in: 4}}] = :sys.get_state(server)
     end
 
     test "when approaching 50 quality", %{name: name} do
       item = Item.new(name, 5, 50)
       server = start_supervised!({Server, [item]})
       :ok = Server.update(server)
-      assert [{:basic, %Item{name: ^name, quality: 50, sell_in: 4}}] = :sys.get_state(server)
+      assert [{:brie, %Item{name: ^name, quality: 50, sell_in: 4}}] = :sys.get_state(server)
     end
   end
 
@@ -57,7 +57,7 @@ defmodule GildedRose.ServerTest do
   end
 
   describe "update/1 with Sulfuras" do
-    test "in normal conditions", %{name: name} do
+    test "in normal conditions" do
       name = "Sulfuras, Hand of Ragnaros"
       item = Item.new(name, 0, 1)
       server = start_supervised!({Server, [item]})
