@@ -1,5 +1,6 @@
 defmodule GildedRose.ServerTest do
   alias GildedRose.{Item, Server}
+  alias Server.Item.{Backstage, Brie, Conjured, Sulfuras}
   use ExUnit.Case
 
   test "items/1" do
@@ -18,14 +19,14 @@ defmodule GildedRose.ServerTest do
       item = Item.new(name, 5, 3)
       server = start_supervised!({Server, [item]})
       :ok = Server.update(server)
-      assert [{:brie, %Item{name: ^name, quality: 4, sell_in: 4}}] = :sys.get_state(server)
+      assert [%Brie{item: %Item{name: ^name, quality: 4, sell_in: 4}}] = :sys.get_state(server)
     end
 
     test "when approaching 50 quality", %{name: name} do
       item = Item.new(name, 5, 50)
       server = start_supervised!({Server, [item]})
       :ok = Server.update(server)
-      assert [{:brie, %Item{name: ^name, quality: 50, sell_in: 4}}] = :sys.get_state(server)
+      assert [%Brie{item: %Item{name: ^name, quality: 50, sell_in: 4}}] = :sys.get_state(server)
     end
   end
 
@@ -38,28 +39,36 @@ defmodule GildedRose.ServerTest do
       item = Item.new(name, 12, 2)
       server = start_supervised!({Server, [item]})
       :ok = Server.update(server)
-      assert [{:backstage, %Item{name: ^name, quality: 3, sell_in: 11}}] = :sys.get_state(server)
+
+      assert [%Backstage{item: %Item{name: ^name, quality: 3, sell_in: 11}}] =
+               :sys.get_state(server)
     end
 
     test "7 days out", %{name: name} do
       item = Item.new(name, 7, 2)
       server = start_supervised!({Server, [item]})
       :ok = Server.update(server)
-      assert [{:backstage, %Item{name: ^name, quality: 4, sell_in: 6}}] = :sys.get_state(server)
+
+      assert [%Backstage{item: %Item{name: ^name, quality: 4, sell_in: 6}}] =
+               :sys.get_state(server)
     end
 
     test "1 day out", %{name: name} do
       item = Item.new(name, 1, 2)
       server = start_supervised!({Server, [item]})
       :ok = Server.update(server)
-      assert [{:backstage, %Item{name: ^name, quality: 5, sell_in: 0}}] = :sys.get_state(server)
+
+      assert [%Backstage{item: %Item{name: ^name, quality: 5, sell_in: 0}}] =
+               :sys.get_state(server)
     end
 
     test "after the show", %{name: name} do
       item = Item.new(name, -1, 10)
       server = start_supervised!({Server, [item]})
       :ok = Server.update(server)
-      assert [{:backstage, %Item{name: ^name, quality: 0, sell_in: -2}}] = :sys.get_state(server)
+
+      assert [%Backstage{item: %Item{name: ^name, quality: 0, sell_in: -2}}] =
+               :sys.get_state(server)
     end
   end
 
@@ -72,21 +81,27 @@ defmodule GildedRose.ServerTest do
       item = Item.new(name, 5, 3)
       server = start_supervised!({Server, [item]})
       :ok = Server.update(server)
-      assert [{:conjured, %Item{name: ^name, quality: 1, sell_in: 4}}] = :sys.get_state(server)
+
+      assert [%Conjured{item: %Item{name: ^name, quality: 1, sell_in: 4}}] =
+               :sys.get_state(server)
     end
 
     test "when approaching 0 quality", %{name: name} do
       item = Item.new(name, 5, 1)
       server = start_supervised!({Server, [item]})
       :ok = Server.update(server)
-      assert [{:conjured, %Item{name: ^name, quality: 0, sell_in: 4}}] = :sys.get_state(server)
+
+      assert [%Conjured{item: %Item{name: ^name, quality: 0, sell_in: 4}}] =
+               :sys.get_state(server)
     end
 
     test "when spoiled", %{name: name} do
       item = Item.new(name, -2, 10)
       server = start_supervised!({Server, [item]})
       :ok = Server.update(server)
-      assert [{:conjured, %Item{name: ^name, quality: 6, sell_in: -3}}] = :sys.get_state(server)
+
+      assert [%Conjured{item: %Item{name: ^name, quality: 6, sell_in: -3}}] =
+               :sys.get_state(server)
     end
   end
 
@@ -96,7 +111,9 @@ defmodule GildedRose.ServerTest do
       item = Item.new(name, 0, 1)
       server = start_supervised!({Server, [item]})
       :ok = Server.update(server)
-      assert [{:sulfuras, %Item{name: ^name, quality: 1, sell_in: 0}}] = :sys.get_state(server)
+
+      assert [%Sulfuras{item: %Item{name: ^name, quality: 1, sell_in: 0}}] =
+               :sys.get_state(server)
     end
   end
 end
