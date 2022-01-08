@@ -31,8 +31,10 @@ defmodule GildedRose.Server do
 
     type =
       cond do
+        String.contains?(token, "backstage") -> :backstage
         String.contains?(token, "aged brie") -> :brie
         String.contains?(token, "conjured") -> :conjured
+        String.contains?(token, "sulfuras") -> :sulfuras
         true -> :basic
       end
 

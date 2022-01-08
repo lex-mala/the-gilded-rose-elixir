@@ -29,6 +29,40 @@ defmodule GildedRose.ServerTest do
     end
   end
 
+  describe "update/1 with a Backstage Item" do
+    setup do
+      [name: "Backstage @ The Knitting Factory"]
+    end
+
+    test "12 days out", %{name: name} do
+      item = Item.new(name, 12, 2)
+      server = start_supervised!({Server, [item]})
+      :ok = Server.update(server)
+      assert [{:backstage, %Item{name: ^name, quality: 3, sell_in: 11}}] = :sys.get_state(server)
+    end
+
+    test "7 days out", %{name: name} do
+      item = Item.new(name, 7, 2)
+      server = start_supervised!({Server, [item]})
+      :ok = Server.update(server)
+      assert [{:backstage, %Item{name: ^name, quality: 4, sell_in: 6}}] = :sys.get_state(server)
+    end
+
+    test "1 day out", %{name: name} do
+      item = Item.new(name, 1, 2)
+      server = start_supervised!({Server, [item]})
+      :ok = Server.update(server)
+      assert [{:backstage, %Item{name: ^name, quality: 5, sell_in: 0}}] = :sys.get_state(server)
+    end
+
+    test "after the show", %{name: name} do
+      item = Item.new(name, -1, 10)
+      server = start_supervised!({Server, [item]})
+      :ok = Server.update(server)
+      assert [{:backstage, %Item{name: ^name, quality: 0, sell_in: -2}}] = :sys.get_state(server)
+    end
+  end
+
   describe "update/1 with a Conjured Item" do
     setup do
       [name: "Conjured boxing gloves"]
@@ -62,7 +96,7 @@ defmodule GildedRose.ServerTest do
       item = Item.new(name, 0, 1)
       server = start_supervised!({Server, [item]})
       :ok = Server.update(server)
-      assert [{:basic, %Item{name: ^name, quality: 1, sell_in: 0}}] = :sys.get_state(server)
+      assert [{:sulfuras, %Item{name: ^name, quality: 1, sell_in: 0}}] = :sys.get_state(server)
     end
   end
 end
