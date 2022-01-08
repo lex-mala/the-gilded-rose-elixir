@@ -1,4 +1,4 @@
-defmodule GildedRose.Item.Ops do
+defmodule GildedRose.Utils do
   alias GildedRose.Item
 
   def dec_sell_in(%Item{sell_in: sell_in} = item) do
