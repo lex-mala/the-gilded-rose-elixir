@@ -1,7 +1,7 @@
 defmodule GildedRose.Time do
   alias GildedRose.Item
 
-  @type item_type :: :basic | :conjured
+  @type item_type :: :backstage | :basic | :brie | :conjured | :sulfuras
 
   @spec tick({item_type(), %Item{}}) :: {item_type(), %Item{}}
   def tick({:sulfuras, %Item{} = item}) do
