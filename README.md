@@ -55,36 +55,3 @@ shared code ownership.
 Just for clarification, an item can never have its _quality_ increase
 above 50, however "Sulfuras" is a legendary item and as such its
 _quality_ is 80 and it never alters.
-
-## Boulevard Instructions
-
-Consider this an exercise in refactoring a legacy system to make your
-feature easier to implement, and leave things in a more maintainable
-state than you found them in.
-
-As with most legacy systems, we can't count on this one to fully
-follow the spec, and we should consider the possibility that it
-contains bugs that other systems compensate for and therefore depend
-on. Even though this example is small, let's pretend it's a
-legitimate legacy system that would be impractical to rewrite.
-
-To complete the exercise, perform a gradual, step by step
-refactoring, showing your work with micro-commits at each step.
-Implement "Conjured" items when the code has improved enough to make it
-easy and clear. Aside from the point at which you implement the
-"Conjured" items spec, preserve all existing legacy behavior at each
-step/commit.
-
-You'll need to initialize a new git repository to start:
-
-```
-git init
-git add -A
-git commit -m "Initial commit"
-```
-
-And you can package up a bundle of your completed work with:
-
-```
-git bundle create your_name.bundle master
-```
