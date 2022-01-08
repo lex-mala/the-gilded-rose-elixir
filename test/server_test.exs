@@ -9,7 +9,27 @@ defmodule GildedRose.ServerTest do
     assert [%Item{name: ^name, sell_in: ^sell_in, quality: ^quality}] = Server.items(server)
   end
 
-  describe "Conjured update/1" do
+  describe "update/1 with Aged Brie" do
+    setup do
+      [name: "Aged Brie"]
+    end
+
+    test "in normal conditions", %{name: name} do
+      item = Item.new(name, 5, 3)
+      server = start_supervised!({Server, [item]})
+      :ok = Server.update(server)
+      assert [{:basic, %Item{name: ^name, quality: 4, sell_in: 4}}] = :sys.get_state(server)
+    end
+
+    test "when approaching 50 quality", %{name: name} do
+      item = Item.new(name, 5, 50)
+      server = start_supervised!({Server, [item]})
+      :ok = Server.update(server)
+      assert [{:basic, %Item{name: ^name, quality: 50, sell_in: 4}}] = :sys.get_state(server)
+    end
+  end
+
+  describe "update/1 with a Conjured Item" do
     setup do
       [name: "Conjured boxing gloves"]
     end
@@ -33,6 +53,16 @@ defmodule GildedRose.ServerTest do
       server = start_supervised!({Server, [item]})
       :ok = Server.update(server)
       assert [{:conjured, %Item{name: ^name, quality: 6, sell_in: -3}}] = :sys.get_state(server)
+    end
+  end
+
+  describe "update/1 with Sulfuras" do
+    test "in normal conditions", %{name: name} do
+      name = "Sulfuras, Hand of Ragnaros"
+      item = Item.new(name, 0, 1)
+      server = start_supervised!({Server, [item]})
+      :ok = Server.update(server)
+      assert [{:basic, %Item{name: ^name, quality: 1, sell_in: 0}}] = :sys.get_state(server)
     end
   end
 end
